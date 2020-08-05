@@ -4,20 +4,6 @@ from scipy import sparse
 import numpy as np
 
 
-def build_path_matrix(start, stop, Nside=32, processes=4, npoints=1000):
-    def build_path(start, stop):
-        path = GreatCirclePath(start, stop, Nside)
-        path.get_points(npoints)
-        path.fill()
-        return path.map
-
-    itrbl = [(start, stop) for (start, stop) in zip(start, stop)]
-    with Pool(processes) as p:
-        result = p.starmap_async(build_path, itrbl)
-        paths = result.get()
-    return sparse.csr_matrix(paths)
-
-
 if __name__ == "__main__":
     import argparse
 
@@ -44,6 +30,19 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    def build_path(start, stop):
+        path = GreatCirclePath(start, stop, args.nside)
+        path.get_points(args.npoints)
+        path.fill()
+        return path.map
+
+    def build_path_matrix(start, stop, processes=4):
+        itrbl = [(start, stop) for (start, stop) in zip(start, stop)]
+        with Pool(processes) as p:
+            result = p.starmap_async(build_path, itrbl)
+            paths = result.get()
+        return sparse.csr_matrix(paths)
+
     all_data = np.loadtxt(args.datafile)
     start_lat = all_data[:, 0]
     start_lon = all_data[:, 1]
@@ -52,7 +51,5 @@ if __name__ == "__main__":
     stop_lon = all_data[:, 3]
     stop = np.stack([stop_lat, stop_lon], axis=1)
 
-    path_matrix = build_path_matrix(
-        start, stop, Nside=args.nside, processes=args.processes, npoints=args.npoints
-    )
+    path_matrix = build_path_matrix(start, stop, processes=args.processes)
     sparse.save_npz(args.outpath, path_matrix)

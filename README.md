@@ -17,7 +17,7 @@ pytest
 
 ## Usage
 ```
-cd greatcirclpaths
+cd greatcirclepaths
 python main.py <infile> <outfile> <options>
 ```
 `<infile>` is a file path containing the latitude and longitude of the start and end points of the great circle paths, with columns 
