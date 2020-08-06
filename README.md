@@ -32,6 +32,7 @@ This can be quite slow when picking many paths so we recommend using as many pro
 ## Visulaisation
 Manipulate the sparse matrix as you want and convert to a regular `numpy` array.  Then just use the [healpy visulaisation functions](https://healpy.readthedocs.io/en/latest/healpy_visu.html). For example
 ```
+import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
 import healpy as hp
@@ -39,7 +40,7 @@ from scipy import sparse
 
 path_matrix = sparse.load_npz(<outfile>)
 path_map = np.array(path_matrix.sum(axis=0))[0]
-hp.mollview(path_map, filp="geo", cmap=cm.jet, title="Ray Density", unit="Number of Rays")
+hp.mollview(path_map, flip="geo", cmap=cm.jet, title="Ray Density", unit="Number of Rays")
 ```
 
 ![Alt text](example.png)
