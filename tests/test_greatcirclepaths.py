@@ -1,28 +1,16 @@
 import numpy as np
-from pytest_cases import parametrize_with_cases, fixture
+import pytest
 
-from greatcirclepaths import GreatCirclePath
+from greatcirclepaths.gcpwork import _GCPwork
 
 
 # Tests based on example given on Great Circle Navigation Wikipedia page
 
-def case_sampling_hp():
-    return ("hpx", 32, None)
-
-
-def case_sampling_mw():
-    return ("MW", None, 32)
-
-
-@fixture
-@parametrize_with_cases("sampling", cases=[case_sampling_hp, case_sampling_mw])
-def path(sampling):
+@pytest.fixture
+def path():
     start = (-33, -71.6)
     stop = (31.4, 121.8)
-    sample = sampling[0]
-    Nside = sampling[1]
-    L = sampling[2]
-    return GreatCirclePath(start, stop, sample, Nside=Nside, L=L)
+    return _GCPwork(start, stop)
 
 
 def test_gcp_course(path):
