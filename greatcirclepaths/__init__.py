@@ -1,4 +1,4 @@
-from greatcirclepaths.healpygcp import _HpxGCP
+from greatcirclepaths.gcpsampling import _HpxGCP
 
 
 class GreatCirclePath:

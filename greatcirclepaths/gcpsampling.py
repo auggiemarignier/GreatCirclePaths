@@ -1,5 +1,6 @@
 import numpy as np
 import healpy as hp
+import pyssht
 
 from greatcirclepaths.gcpwork import _GCPwork
 
@@ -37,3 +38,13 @@ class _HpxGCP(_GCPwork):
         # TODO: figure out how to choose npoints based on pathlength and Nside
         fracs = np.linspace(0, 1, npoints)
         self.points = [self._point_at_fraction(frac) for frac in fracs]
+
+
+class _MWGCP(_GCPwork):
+    def __init__(self, start, stop, L):
+        self.start = start
+        self.stop = stop
+        self.L = L
+        self.map = np.zeros(pyssht.sample_length(L))
+
+        
