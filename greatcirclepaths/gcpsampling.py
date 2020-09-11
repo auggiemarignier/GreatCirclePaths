@@ -29,13 +29,15 @@ class _MWGCP(_GCPwork):
 
     def fill(self):
         pixels = [
-            [
+            (
                 pyssht.theta_to_index(point[0], self.L),
                 pyssht.phi_to_index(point[1], self.L),
-            ]
+            )
             for point in self.points
         ]
-        self.map[pixels] = 1
+        for pix in pixels:
+            self.map[pix] = 1
+        self.map = self.map.flatten()
 
     def get_points(self, npoints):
         # TODO: figure out how to choose npoints based on pathlength and Nside

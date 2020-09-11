@@ -40,7 +40,13 @@ class _GCPwork:
         phi0 = self._node_lon()
         numerator = np.sin(self.alpha0) * np.sin(dist)
         denominator = np.cos(dist)
-        return np.arctan2(numerator, denominator) + phi0
+        lon = np.arctan2(numerator, denominator) + phi0
+        if lon < -2 * np.pi:
+            return lon + 2 * np.pi
+        elif lon > 2 * np.pi:
+            return lon - 2 * np.pi
+        else:
+            return lon
 
     def _epicentral_distance(self):
         """

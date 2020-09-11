@@ -13,7 +13,8 @@ if __name__ == "__main__":
         type=str,
         help="File with columns start_lat, start_lon, end_lat, end_lon",
     )
-    parser.add_argument("outpath", type=str, help="output filename for sparse matrix")
+    parser.add_argument("outfile", type=str, help="output filename for sparse matrix")
+    parser.add_argument("method", choices=["MW", "hpx"], help="Sampling method.  Either 'MW' or 'hpx'.")
     parser.add_argument(
         "-P", "--processes", type=int, default=4, help="Number of parallel processes"
     )
@@ -27,11 +28,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "-Ns", "--nside", type=int, default=32, help="Healpix Nside parameter",
     )
-
+    parser.add_argument(
+        "-L", "--L", type=int, default=32, help="Angular bandlimit",
+    )
     args = parser.parse_args()
 
     def build_path(start, stop):
-        path = GreatCirclePath(start, stop, args.nside)
+        path = GreatCirclePath(start, stop, args.method, Nside=args.nside, L=args.L)
         path.get_points(args.npoints)
         path.fill()
         return path.map
