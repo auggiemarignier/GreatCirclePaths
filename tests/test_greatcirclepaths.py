@@ -15,7 +15,7 @@ def Nside():
 def path(Nside):
     start = (-33, -71.6)
     stop = (31.4, 121.8)
-    return GreatCirclePath(start, stop, Nside)
+    return GreatCirclePath(start, stop, "hpx", Nside=Nside)
 
 
 def test_gcp_course(path):
