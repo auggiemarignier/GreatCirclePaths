@@ -15,11 +15,6 @@ class _HpxGCP(_GCPwork):
         pixels = [hp.ang2pix(self.Nside, *point) for point in self.points]
         self.map[pixels] = 1
 
-    def get_points(self, npoints):
-        # TODO: figure out how to choose npoints based on pathlength and Nside
-        fracs = np.linspace(0, 1, npoints)
-        self.points = [self._point_at_fraction(frac) for frac in fracs]
-
 
 class _MWGCP(_GCPwork):
     def __init__(self, start, stop, L, weighting):
@@ -42,11 +37,6 @@ class _MWGCP(_GCPwork):
         if hasattr(self, "areas"):
             self.map *= self.areas
         self.map = self.map.flatten()
-
-    def get_points(self, npoints):
-        # TODO: figure out how to choose npoints based on pathlength and Nside
-        fracs = np.linspace(0, 1, npoints)
-        self.points = [self._point_at_fraction(frac) for frac in fracs]
 
     def calc_pixel_areas(self, L, r=1):
         thetas, phis = pyssht.sample_positions(L)

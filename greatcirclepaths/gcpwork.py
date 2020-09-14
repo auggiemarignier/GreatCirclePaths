@@ -20,6 +20,11 @@ class _GCPwork:
         self.alpha0 = self._course_at_node()
         self.sig01 = self._node_to_start()
 
+    def get_points(self, npoints):
+        # TODO: figure out how to choose npoints based on pathlength and Nside/L
+        fracs = np.linspace(0, 1, npoints)
+        self.points = [self._point_at_fraction(frac) for frac in fracs]
+
     def _point_at_fraction(self, frac):
         """
         Returns (colat, lon) in radians of a point a fraction frac along the minor arc of the GCP
