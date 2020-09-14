@@ -1,14 +1,14 @@
 # Great Circle Path
-A simple script to find [Healpix](https://healpy.readthedocs.io/en/latest/index.html) pixels along great circle paths.
+A simple script to find pixels along great circle paths.  Supports [Healpix](https://healpy.readthedocs.io/en/latest/index.html) and [MW](https://arxiv.org/abs/1110.6298#:~:text=The%20fundamental%20property%20of%20any,(L%5E2)%20samples.)
 
 ## Installation
-All dependencies mamaged by [poetry](https://python-poetry.org/)
+All dependencies managed by [poetry](https://python-poetry.org/)
 ```
 cd GreatCirclePaths
 poetry install
 source .venv/bin/activate
 ```
-Note for the last line, the location of the environment (in this case `.venv`) will depend on your poetry configuration.
+Note for the last line, the location of the environment (in this case `.venv`) will depend on your poetry configuration.  If you prefer to use `pip` the main dependecies are [healpy](https://pypi.org/project/healpy/) and [pyssht](https://pypi.org/project/pyssht/).
 
 Test the code with
 ```
@@ -18,12 +18,14 @@ pytest
 ## Usage
 ```
 cd greatcirclepaths
-python main.py <infile> <outfile> <options>
+python main.py <infile> <outfile> <sampling> <options>
 ```
 `<infile>` is a file path containing the latitude and longitude of the start and end points of the great circle paths, with columns 
 > start_latitude,  start_longitude, end_latitude, end_longitude 
 
 `<outfile>` is a file path where output will be saved as a `.npz` file.  Output is a `scipy.sparse` matrix, where each row is a HealPix map with 1s along the great circle path.
+
+`<sampling>` must be either `MW` or `hpx`.
 
 Run `python main.py --help` for further details.
 
