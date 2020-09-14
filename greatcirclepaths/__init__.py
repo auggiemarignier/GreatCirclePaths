@@ -6,9 +6,9 @@ class GreatCirclePath:
     Finds all the points along a great circle path and the corresponding pixels
     start/stop are tuples (lat, lon) in degrees
     """
-    def __new__(self, start, stop, sampling, L=None, Nside=None):
+    def __new__(cls, start, stop, sampling, L=None, Nside=None, weighting=True):
         if sampling == "MW":
-            return _MWGCP(start, stop, L)
+            return _MWGCP(start, stop, L, weighting)
         elif sampling == "hpx":
             return _HpxGCP(start, stop, Nside)
         else:

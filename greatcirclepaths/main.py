@@ -55,4 +55,4 @@ if __name__ == "__main__":
     stop = np.stack([stop_lat, stop_lon], axis=1)
 
     path_matrix = build_path_matrix(start, stop, processes=args.processes)
-    sparse.save_npz(args.outpath, path_matrix)
+    sparse.save_npz(args.outfile, path_matrix)
