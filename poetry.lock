@@ -301,11 +301,11 @@ version = "2.4.7"
 
 [[package]]
 category = "main"
-description = ""
+description = "Fast spin spherical transforms"
 name = "pyssht"
 optional = false
 python-versions = "*"
-version = "2.0"
+version = "1.3.2"
 
 [package.dependencies]
 cython = "*"
@@ -313,12 +313,8 @@ numpy = "*"
 scipy = "*"
 
 [package.extras]
-dev = ["setuptools", "wheel", "scikit-build", "cmake", "ninja", "cython", "conan"]
-
-[package.source]
-reference = "c5ee7338fbdd15c489027f9589745e6dfc0c4609"
-type = "git"
-url = "https://github.com/astro-informatics/src_ssht.git"
+build = ["setuptools", "wheel", "scikit-build", "cmake (>=3.10)", "ninja", "cython", "conan", "pip (<20.0.0 || >20.0.0,<20.0.1 || >20.0.1)"]
+dev = ["setuptools", "wheel", "scikit-build", "cmake (>=3.10)", "ninja", "cython", "conan", "pip (<20.0.0 || >20.0.0,<20.0.1 || >20.0.1)"]
 
 [[package]]
 category = "dev"
@@ -434,7 +430,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "66c10edaf3b9fb964151d7eb1c3273a5c8cf1d24fba782a58b784082ad396fac"
+content-hash = "713dd84160ae10ae852115af86f3422105db8bbbb680b320b636f2c1699d6cb8"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -692,7 +688,10 @@ pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
-pyssht = []
+pyssht = [
+    {file = "pyssht-1.3.2-cp38-cp38-macosx_10_12_x86_64.whl", hash = "sha256:d7c3e9dc38a863c58b43b4b9bca8d7e27ac106a6ec2ba104d07cd1a713d66024"},
+    {file = "pyssht-1.3.2.tar.gz", hash = "sha256:c6a87a7977f9a24eb40b2c3ddb6220301d37f9934550350b10049ae16e4fa01c"},
+]
 pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
     {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
