@@ -2,9 +2,11 @@ import numpy as np
 import pytest
 
 from greatcirclepaths.gcpwork import _GCPwork
+from greatcirclepaths.gcpsampling import _MWGCP
 
 
 # Tests based on example given on Great Circle Navigation Wikipedia page
+
 
 @pytest.fixture
 def path():
@@ -29,3 +31,11 @@ def test_gcp_midpoint(path):
     lat = 90 - colat
     assert np.round(lat, 2) == -6.81
     assert np.round(lon, 2) == -159.18
+
+
+def test_mw_pixel_areas():
+    start = (-33, -71.6)
+    stop = (31.4, 121.8)
+    path = _MWGCP(start, stop, 20, weighting=True)
+
+    assert np.isclose(np.sum(path.areas), 4 * np.pi)
