@@ -1,4 +1,5 @@
 import numpy as np
+import pyssht
 import pytest
 
 from greatcirclepaths.gcpwork import _GCPwork
@@ -33,9 +34,31 @@ def test_gcp_midpoint(path):
     assert np.round(lon, 2) == -159.18
 
 
-def test_mw_pixel_areas():
-    start = (-33, -71.6)
-    stop = (31.4, 121.8)
-    path = _MWGCP(start, stop, 20, weighting=True)
+@pytest.fixture
+def random_start_stop():
+    from random import uniform
+    start = (uniform(-90, 90), uniform(-180, 180))
+    stop = (uniform(-90, 90), uniform(-180, 180))
+    return start, stop
 
-    assert np.isclose(np.sum(path.areas), 4 * np.pi)
+
+def test_mw_pixel_areas(random_start_stop):
+    start, stop = random_start_stop
+    path = _MWGCP(start, stop, 20)
+    areas = path.calc_pixel_areas()
+    assert np.isclose(np.sum(areas), 4 * np.pi)
+
+
+def test_mw_path_pixel_distances(random_start_stop):
+    start, stop = random_start_stop
+    path = _MWGCP(start, stop, 20)
+    path.get_points(100)
+    pixels = [
+        (
+            pyssht.theta_to_index(point[0], path.L),
+            pyssht.phi_to_index(point[1], path.L),
+        )
+        for point in path.points
+    ]
+    distances = path.calc_segment_distances(pixels)
+    assert np.isclose(np.sum(distances), path._epicentral_distance())
