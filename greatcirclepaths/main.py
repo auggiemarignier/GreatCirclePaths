@@ -24,8 +24,14 @@ if __name__ == "__main__":
         "-N",
         "--npoints",
         type=int,
-        default=1000,
         help="Number of points to be sampled along each path",
+    )
+    parser.add_argument(
+        "-PPR",
+        "--points_per_rad",
+        type=int,
+        default=200,
+        help="Number of points per radian along each path",
     )
     parser.add_argument(
         "-Ns", "--nside", type=int, default=32, help="Healpix Nside parameter",
@@ -50,16 +56,30 @@ if __name__ == "__main__":
             L=args.L,
             weighting=args.weighting,
         )
-        path.get_points(args.npoints)
+        path.get_points(npoints=args.npoints, points_per_rad=args.points_per_rad)
         path.fill()
         return path.map
 
-    def build_path_matrix(start, stop, processes=4):
+    def build_path_matrix_par(start, stop, processes):
         itrbl = [(start, stop) for (start, stop) in zip(start, stop)]
         with Pool(processes) as p:
             result = p.starmap_async(build_path, itrbl)
             paths = result.get()
         return sparse.csr_matrix(paths)
+
+    def build_path_matrix_ser(start, stop):
+        buf = build_path(start[0], stop[0])
+        paths = np.zeros((start.shape[0], buf.shape[0]))
+        for i, (stt, stp) in enumerate(zip(start, stop)):
+            paths[i] = build_path(stt, stp)
+        return sparse.csr_matrix(paths)
+
+    def build_path_matrix(start, stop, processes=4):
+        if processes > 0:
+            path_matrix = build_path_matrix_par(start, stop, processes)
+        else:
+            path_matrix = build_path_matrix_ser(start, stop)
+        return path_matrix
 
     all_data = np.loadtxt(args.datafile)
     start_lat = all_data[:, 0]
