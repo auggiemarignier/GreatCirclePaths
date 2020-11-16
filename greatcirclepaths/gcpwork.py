@@ -20,8 +20,15 @@ class _GCPwork:
         self.alpha0 = self._course_at_node()
         self.sig01 = self._node_to_start()
 
-    def get_points(self, npoints):
-        # TODO: figure out how to choose npoints based on pathlength and Nside/L
+    def get_points(self, npoints=None, points_per_rad=None):
+        if npoints is None and points_per_rad is None:
+            raise ValueError("One of 'npoints' or 'points_per_rad' must be given")
+        elif all([npoints is None, points_per_rad is None]):
+            raise ValueError("Only one of 'npoints' or 'points_per_rad' can be given")
+        elif npoints is None:
+            npoints = int(self._epicentral_distance() * points_per_rad)
+        else:
+            pass
         fracs = np.linspace(0, 1, npoints)
         self.points = [self._point_at_fraction(frac) for frac in fracs]
 
