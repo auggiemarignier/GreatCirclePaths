@@ -49,11 +49,20 @@ class _MWGCP(_GCPwork):
         the path passes
         """
         distances = np.zeros(pyssht.sample_shape(self.L, Method="MW"))
-        for point1, point2, pix in zip(self.points, self.points[1:], pixels):
+        for point1, point2, pix1, pix2 in zip(
+            self.points, self.points[1:], pixels, pixels[1:]
+        ):
             point1 = self._colatlonrad2latlondeg(*point1)
             point2 = self._colatlonrad2latlondeg(*point2)
             seg = self.__class__(point1, point2, self.L, weighting=None)
-            distances[pix] += seg._epicentral_distance()
+            if pix1 == pix2:
+                distances[pix1] += seg._epicentral_distance()
+            else:
+                pointhalf = self._colatlonrad2latlondeg(*seg._point_at_fraction(0.5))
+                seg1 = self.__class__(point1, pointhalf, self.L, weighting=None)
+                seg2 = self.__class__(pointhalf, point2, self.L, weighting=None)
+                distances[pix1] += seg1._epicentral_distance()
+                distances[pix2] += seg2._epicentral_distance()
         return distances
 
     def calc_pixel_areas(self, r=1):
