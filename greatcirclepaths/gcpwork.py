@@ -23,11 +23,11 @@ class _GCPwork:
     def get_points(self, npoints=None, points_per_rad=None):
         if npoints is None and points_per_rad is None:
             raise ValueError("One of 'npoints' or 'points_per_rad' must be given")
-        elif all([npoints is None, points_per_rad is None]):
+        elif npoints is not None and points_per_rad is not None:
             raise ValueError("Only one of 'npoints' or 'points_per_rad' can be given")
-        elif npoints is None:
+        elif npoints is None and points_per_rad is not None:
             npoints = int(self._epicentral_distance() * points_per_rad)
-        else:
+        elif npoints is not None and points_per_rad is None:
             pass
         fracs = np.linspace(0, 1, npoints)
         self.points = [self._point_at_fraction(frac) for frac in fracs]
