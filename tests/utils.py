@@ -17,7 +17,7 @@ def Y22_int_theta(theta, phi):
     return norm * np.sin(theta) ** 3 * (np.exp(2j * phi) - 1)
 
 
-def build_path_matrix_ser(start, stop, L):
+def build_path_matrix_ser(start, stop, L, nearest=False):
     paths = np.zeros((start.shape[0], pyssht.sample_length(L, Method="MW")))
     for i, (stt, stp) in enumerate(zip(start, stop)):
         path = _MWGCP(
@@ -27,6 +27,6 @@ def build_path_matrix_ser(start, stop, L):
             weighting="distances",
         )
         path.get_points(points_per_rad=150)
-        path.fill()
+        path.fill(nearest)
         paths[i] = path.map
     return sparse.csr_matrix(paths)
