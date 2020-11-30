@@ -17,6 +17,18 @@ def Y22_int_theta(theta, phi):
     return norm * np.sin(theta) ** 3 * (np.exp(2j * phi) - 1)
 
 
+def Y1010(thetas, phis):
+    theta, phi = np.meshgrid(thetas, phis, indexing="ij")
+    norm = (1 / 1024) * np.sqrt(969969 / np.pi)
+    return norm * np.sin(theta) ** 10 * np.exp(10j * phi)
+
+
+def Y1010_int_theta(theta, phi):
+    """Path integral for constant theta"""
+    norm = (-1j / 10240) * np.sqrt(969969 / np.pi)
+    return norm * np.sin(theta) ** 11 * (np.exp(10j * phi) - 1)
+
+
 def build_path_matrix_ser(start, stop, L, nearest=False):
     paths = np.zeros((start.shape[0], pyssht.sample_length(L, Method="MW")))
     for i, (stt, stp) in enumerate(zip(start, stop)):

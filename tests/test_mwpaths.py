@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 
 from greatcirclepaths.gcpsampling import _MWGCP
-from .utils import Y22, Y22_int_theta, build_path_matrix_ser
+from .utils import Y1010, Y1010_int_theta, build_path_matrix_ser
 
 
 @pytest.fixture
@@ -40,7 +40,7 @@ def test_mw_path_pixel_distances(random_start_stop, L, nearest):
 @pytest.mark.parametrize("nearest", [False, True])
 def test_path_integral(L, nearest):
     thetas, phis = pyssht.sample_positions(L, Method="MW")
-    f_mw = Y22(thetas, phis).flatten()
+    f_mw = Y1010(thetas, phis).flatten()
     path_lengths = np.linspace(0, 180, 300, endpoint=False)
 
     theta = thetas[pyssht.theta_to_index(np.pi / 2, L)]
@@ -49,6 +49,6 @@ def test_path_integral(L, nearest):
     path_matrix = build_path_matrix_ser(starts, stops, L, nearest)
 
     numerical = path_matrix.dot(f_mw)
-    analytical = Y22_int_theta(theta, np.radians(path_lengths)).flatten()
+    analytical = Y1010_int_theta(theta, np.radians(path_lengths)).flatten()
 
     assert np.allclose(numerical, analytical)
