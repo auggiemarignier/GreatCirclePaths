@@ -19,7 +19,7 @@ class _HpxGCP(_GCPwork):
 class _MWGCP(_GCPwork):
     def __init__(self, start, stop, L, weighting=None):
         if weighting not in [None, "areas", "distances"]:
-            raise ValueError("wieghting must be either None, 'areas' or 'distances")
+            raise ValueError("weighting must be either None, 'areas' or 'distances")
         super().__init__(start, stop)
         self.L = L
         self.map = np.zeros(pyssht.sample_shape(L))
