@@ -51,7 +51,7 @@ class _MWGCP(_GCPwork):
             pixels = [
                 (
                     self._nearest_sample(thetas, point[0]),
-                    self._nearest_sample(phis, point[1]),
+                    self._nearest_sample(phis, point[1], wrap_value=2 * np.pi),
                 )
                 for point in self.points
             ]
@@ -108,5 +108,12 @@ class _MWGCP(_GCPwork):
         return latd, lond
 
     @staticmethod
-    def _nearest_sample(arr, v):
-        return np.argmin(np.abs(arr - v))
+    def _nearest_sample(arr, v, wrap_value=None):
+        if wrap_value is None:
+            return np.argmin(np.abs(arr - v))
+        else:
+            if v > wrap_value:
+                v -= wrap_value
+            arr = np.concatenate([arr, wrap_value], axis=None)
+            nearest = np.argmin(np.abs(arr - v))
+            return 0 if nearest == len(arr) - 1 else nearest

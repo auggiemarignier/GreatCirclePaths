@@ -43,7 +43,7 @@ def test_path_integral(L, nearest):
     f_mw = Y1010(thetas, phis).flatten()
     path_lengths = np.linspace(0, 180, 300, endpoint=False)
 
-    theta = thetas[pyssht.theta_to_index(np.pi / 2, L)]
+    theta = np.pi / 2
     starts = np.array([[np.degrees(np.pi / 2 - theta), 0] for _ in path_lengths])
     stops = np.array([[np.degrees(np.pi / 2 - theta), lon] for lon in path_lengths])
     path_matrix = build_path_matrix_ser(starts, stops, L, nearest)
@@ -52,3 +52,13 @@ def test_path_integral(L, nearest):
     analytical = Y1010_int_theta(theta, np.radians(path_lengths)).flatten()
 
     assert np.allclose(numerical, analytical)
+
+
+@pytest.mark.parametrize(
+    "value, expected", [(6.13, 38), (6.28, 0), (0.05, 0), (6.4, 1)]
+)  # correct for L=20, may fail otherwise
+def test_nearest_sample(L, value, expected):
+    _, phis = pyssht.sample_positions(L)
+    nearest = _MWGCP._nearest_sample(phis, value, wrap_value=2 * np.pi)
+
+    assert nearest == expected
