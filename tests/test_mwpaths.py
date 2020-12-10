@@ -22,7 +22,7 @@ def random_start_stop():
 
 def test_mw_pixel_areas(random_start_stop, L):
     start, stop = random_start_stop
-    path = _MWGCP(start, stop, L)
+    path = _MWGCP(start, stop, L, latlon=True)
     areas = path.calc_pixel_areas()
     assert np.isclose(np.sum(areas), 4 * np.pi)
 
@@ -30,7 +30,7 @@ def test_mw_pixel_areas(random_start_stop, L):
 @pytest.mark.parametrize("nearest", [False, True])
 def test_mw_path_pixel_distances(random_start_stop, L, nearest):
     start, stop = random_start_stop
-    path = _MWGCP(start, stop, L)
+    path = _MWGCP(start, stop, L, latlon=True)
     path.get_points(points_per_rad=150)
     pixels = path.select_pixels(nearest)
     distances = path.calc_segment_distances(pixels)
@@ -41,15 +41,15 @@ def test_mw_path_pixel_distances(random_start_stop, L, nearest):
 def test_path_integral(L, nearest):
     thetas, phis = pyssht.sample_positions(L, Method="MW")
     f_mw = Y1010(thetas, phis).flatten()
-    path_lengths = np.linspace(0, 180, 300, endpoint=False)
+    phi2 = np.linspace(0, np.pi, 300, endpoint=False)
 
     theta = np.pi / 2
-    starts = np.array([[np.degrees(np.pi / 2 - theta), 0] for _ in path_lengths])
-    stops = np.array([[np.degrees(np.pi / 2 - theta), lon] for lon in path_lengths])
+    starts = np.array([[theta, 0] for _ in phi2])
+    stops = np.array([[theta, lon] for lon in phi2])
     path_matrix = build_path_matrix_ser(starts, stops, L, nearest)
 
     numerical = path_matrix.dot(f_mw)
-    analytical = Y1010_int_theta(theta, np.radians(path_lengths)).flatten()
+    analytical = Y1010_int_theta(theta, np.radians(phi2)).flatten()
 
     assert np.allclose(numerical, analytical)
 

@@ -11,7 +11,7 @@ from greatcirclepaths.gcpwork import _GCPwork
 def path():
     start = (-33, -71.6)
     stop = (31.4, 121.8)
-    return _GCPwork(start, stop)
+    return _GCPwork(start, stop, latlon=True)
 
 
 def test_gcp_course(path):

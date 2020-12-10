@@ -2,18 +2,19 @@ import numpy as np
 
 
 class _GCPwork:
-    def __init__(self, start, stop):
+    def __init__(self, start, stop, latlon=False):
         self.start = start
         self.stop = stop
 
-        self._endpoints2rad()
+        if latlon:
+            self._endpoints2rad()
         self.theta1 = self.start[0]
         self.theta2 = self.stop[0]
         self.phi12 = self.stop[1] - self.start[1]
-        if self.phi12 > 180:
-            self.phi12 -= 360
-        elif self.phi12 < -180:
-            self.phi12 += 360
+        if self.phi12 > np.pi:
+            self.phi12 -= 2 * np.pi
+        elif self.phi12 < -np.pi:
+            self.phi12 += 2 * np.pi
         else:
             pass
         self.alpha1 = self._course_at_start()
