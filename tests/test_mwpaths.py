@@ -55,7 +55,7 @@ def test_path_integral(L, nearest):
 
 
 @pytest.mark.parametrize(
-    "value, expected", [(6.13, 38), (6.28, 0), (0.05, 0), (6.4, 1)]
+    "value, expected", [(6.13, 38), (6.28, 0), (0.05, 0), (6.4, 1), (-np.pi / 4, 34)]
 )  # correct for L=20, may fail otherwise
 def test_nearest_sample(L, value, expected):
     _, phis = pyssht.sample_positions(L)
