@@ -45,6 +45,7 @@ if __name__ == "__main__":
         choices=["areas", "distances"],
         help="Weight pixels either by area or distance travelled by path",
     )
+    parser.add_argument("--latlon", action="store_true", help="Use if inputs are in lat/lon format")
     args = parser.parse_args()
 
     def build_path(start, stop):
@@ -55,6 +56,7 @@ if __name__ == "__main__":
             Nside=args.nside,
             L=args.L,
             weighting=args.weighting,
+            latlon=args.latlon,
         )
         path.get_points(npoints=args.npoints, points_per_rad=args.points_per_rad)
         path.fill()
