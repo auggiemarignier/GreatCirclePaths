@@ -103,6 +103,8 @@ class _MWGCP(_GCPwork):
         if wrap_value is None:
             return np.argmin(np.abs(arr - v))
         else:
+            if v < 0:
+                v += wrap_value
             if v > wrap_value:
                 v -= wrap_value
             arr = np.concatenate([arr, wrap_value], axis=None)
