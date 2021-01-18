@@ -25,8 +25,8 @@ class _MWGCP(_GCPwork):
         self.map = np.zeros(pyssht.sample_shape(L))
         self.weighting = weighting
 
-    def fill(self, nearest=False):
-        pixels = self.select_pixels(nearest)
+    def fill(self):
+        pixels = self.select_pixels()
         for pix in pixels:
             self.map[pix] = 1
         if self.weighting is not None:
@@ -37,24 +37,15 @@ class _MWGCP(_GCPwork):
             self.map *= weights
         self.map = self.map.flatten()
 
-    def select_pixels(self, nearest=False):
-        if not nearest:
-            pixels = [
-                (
-                    pyssht.theta_to_index(point[0], self.L),
-                    pyssht.phi_to_index(point[1], self.L),
-                )
-                for point in self.points
-            ]
-        else:
-            thetas, phis = pyssht.sample_positions(self.L)
-            pixels = [
-                (
-                    self._nearest_sample(thetas, point[0]),
-                    self._nearest_sample(phis, point[1], wrap_value=2 * np.pi),
-                )
-                for point in self.points
-            ]
+    def select_pixels(self):
+        thetas, phis = pyssht.sample_positions(self.L)
+        pixels = [
+            (
+                self._nearest_sample(thetas, point[0]),
+                self._nearest_sample(phis, point[1], wrap_value=2 * np.pi),
+            )
+            for point in self.points
+        ]
         return pixels
 
     def calc_segment_distances(self, pixels):
