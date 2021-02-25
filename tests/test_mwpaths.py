@@ -3,7 +3,6 @@ import pytest
 import numpy as np
 
 from greatcirclepaths.gcpsampling import _MWGCP
-from .utils import Y1010, Y1010_int_theta, build_path_matrix_ser
 
 
 @pytest.fixture
@@ -33,7 +32,14 @@ def test_mw_path_pixel_distances(random_start_stop, L):
     path.get_points(points_per_rad=150)
     pixels = path.select_pixels()
     distances = path.calc_segment_distances(pixels)
+    start = np.radians(start)
+    stop = np.radians(stop)
+    lawofcosines = np.arccos(
+        np.sin(start[0]) * np.sin(stop[0])
+        + np.cos(start[0]) * np.cos(stop[0]) * np.cos(np.abs(start[1] - stop[1]))
+    )
     assert np.isclose(np.sum(distances), path._epicentral_distance())
+    assert np.isclose(path._epicentral_distance(), lawofcosines)
 
 
 @pytest.mark.parametrize(
