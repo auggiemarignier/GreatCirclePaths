@@ -26,11 +26,12 @@ def test_mw_pixel_areas(random_start_stop, L):
     assert np.isclose(np.sum(areas), 4 * np.pi)
 
 
-def test_mw_path_pixel_distances(random_start_stop, L):
+@pytest.mark.parametrize("n", [1, 2])
+def test_mw_path_pixel_distances(random_start_stop, L, n):
     start, stop = random_start_stop
     path = _MWGCP(start, stop, L, latlon=True)
     path.get_points(points_per_rad=150)
-    pixels = path.select_samples()
+    pixels = path.select_samples(n_nearest=n)
     distances = path.calc_segment_distances(pixels)
     start = np.radians(start)
     stop = np.radians(stop)

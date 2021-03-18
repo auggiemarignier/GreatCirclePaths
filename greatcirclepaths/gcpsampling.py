@@ -38,6 +38,10 @@ class _MWGCP(_GCPwork):
         self.map = self.map.flatten()
 
     def select_samples(self, n_nearest=1):
+        """
+        n_nearest is the number of nearest samples wanted in theta AND phi.
+        e.g if n_nearest = 2, 4 points will be returned
+        """
         thetas, phis = pyssht.sample_positions(self.L)
         samples = [
             (
