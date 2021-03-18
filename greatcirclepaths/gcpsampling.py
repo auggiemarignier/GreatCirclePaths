@@ -90,14 +90,17 @@ class _MWGCP(_GCPwork):
         return 2 * np.pi * r ** 2 * (1 - np.cos(alpha))
 
     @staticmethod
-    def _nearest_sample(arr, v, wrap_value=None):
+    def _nearest_samples(arr, v, n=1, wrap_value=None):
         if wrap_value is None:
-            return np.argmin(np.abs(arr - v))
+            diff = np.abs(arr - v)
+            return np.argpartition(diff, n)[:n]
         else:
             if v < 0:
                 v += wrap_value
             if v > wrap_value:
                 v -= wrap_value
             arr = np.concatenate([arr, wrap_value], axis=None)
-            nearest = np.argmin(np.abs(arr - v))
-            return 0 if nearest == len(arr) - 1 else nearest
+            diff = np.abs(arr - v)
+            inds = np.argpartition(diff, n)[:n]
+            inds[inds == len(arr) - 1] = 0
+            return inds

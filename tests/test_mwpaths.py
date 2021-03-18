@@ -47,6 +47,19 @@ def test_mw_path_pixel_distances(random_start_stop, L):
 )  # correct for L=20, may fail otherwise
 def test_nearest_sample(L, value, expected):
     _, phis = pyssht.sample_positions(L)
-    nearest = _MWGCP._nearest_sample(phis, value, wrap_value=2 * np.pi)
-
+    nearest = _MWGCP._nearest_samples(phis, value, wrap_value=2 * np.pi)
     assert nearest == expected
+
+
+@pytest.mark.parametrize("value, expected", [(np.pi / 2, [9, 10])])
+def test_nearest_n_samples(L, value, expected):
+    thetas, _ = pyssht.sample_positions(L)
+    nearest = _MWGCP._nearest_samples(thetas, value, n=2)
+    assert np.alltrue(nearest == expected)
+
+
+@pytest.mark.parametrize("value, expected", [(6.283, [0, 38])])
+def test_nearest_n_samples_wrap(L, value, expected):
+    _, phis = pyssht.sample_positions(L)
+    nearest = _MWGCP._nearest_samples(phis, value, n=2, wrap_value=2 * np.pi)
+    assert np.alltrue(nearest == expected)
