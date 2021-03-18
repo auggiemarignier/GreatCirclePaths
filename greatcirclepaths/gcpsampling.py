@@ -109,3 +109,18 @@ class _MWGCP(_GCPwork):
             inds = np.argpartition(diff, n)[:n]
             inds[inds == len(arr) - 1] = 0
             return inds
+
+    @staticmethod
+    def _point_to_sample_weights(point, sample_thetas, sample_phis, L):
+        """
+        sample_thetas/phis will be lists of indices
+        """
+        thetas, phis = pyssht.sample_positions(L)
+        weights = np.zeros((thetas.size, phis.size))
+        thetas = thetas[sample_thetas]
+        phis = phis[sample_phis]
+        for theta, theta_ind in zip(thetas, sample_thetas):
+            for phi, phi_ind in zip(phis, sample_phis):
+                path_to_sample = _GCPwork(point, (theta, phi))
+                weights[theta_ind, phi_ind] = path_to_sample._epicentral_distance()
+        return weights / weights.sum()
