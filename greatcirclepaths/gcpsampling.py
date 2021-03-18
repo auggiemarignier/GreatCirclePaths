@@ -37,12 +37,14 @@ class _MWGCP(_GCPwork):
             self.map *= weights
         self.map = self.map.flatten()
 
-    def select_pixels(self):
+    def select_samples(self, n_nearest=1):
         thetas, phis = pyssht.sample_positions(self.L)
         pixels = [
             (
-                self._nearest_sample(thetas, point[0]),
-                self._nearest_sample(phis, point[1], wrap_value=2 * np.pi),
+                self._nearest_samples(thetas, point[0], n=n_nearest),
+                self._nearest_samples(
+                    phis, point[1], n=n_nearest, wrap_value=2 * np.pi
+                ),
             )
             for point in self.points
         ]

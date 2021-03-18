@@ -30,7 +30,7 @@ def test_mw_path_pixel_distances(random_start_stop, L):
     start, stop = random_start_stop
     path = _MWGCP(start, stop, L, latlon=True)
     path.get_points(points_per_rad=150)
-    pixels = path.select_pixels()
+    pixels = path.select_samples()
     distances = path.calc_segment_distances(pixels)
     start = np.radians(start)
     stop = np.radians(stop)
