@@ -26,20 +26,20 @@ class _MWGCP(_GCPwork):
         self.weighting = weighting
 
     def fill(self):
-        pixels = self.select_pixels()
-        for pix in pixels:
-            self.map[pix] = 1
+        samples = self.select_samples()
+        for samp in samples:
+            self.map[samp] = 1
         if self.weighting is not None:
             if self.weighting == "areas":
                 weights = self.calc_pixel_areas()
             if self.weighting == "distances":
-                weights = self.calc_segment_distances(pixels)
+                weights = self.calc_segment_distances(samples)
             self.map *= weights
         self.map = self.map.flatten()
 
     def select_samples(self, n_nearest=1):
         thetas, phis = pyssht.sample_positions(self.L)
-        pixels = [
+        samples = [
             (
                 self._nearest_samples(thetas, point[0], n=n_nearest),
                 self._nearest_samples(
@@ -48,26 +48,25 @@ class _MWGCP(_GCPwork):
             )
             for point in self.points
         ]
-        return pixels
+        return samples
 
-    def calc_segment_distances(self, pixels):
+    def calc_segment_distances(self, samples):
         """
-        pixels is a list of tuples (theta_ind, phi_ind) through which
-        the path passes
+        samples is a list of tuples (theta_ind, phi_ind) of MW samples that the path goes past
         """
         distances = np.zeros(pyssht.sample_shape(self.L, Method="MW"))
-        for point1, point2, pix1, pix2 in zip(
-            self.points, self.points[1:], pixels, pixels[1:]
+        for point1, point2, samp1, samp2 in zip(
+            self.points, self.points[1:], samples, samples[1:]
         ):
-            seg = self.__class__(point1, point2, self.L, weighting=None)
-            if pix1 == pix2:
-                distances[pix1] += seg._epicentral_distance()
+            seg = _GCPwork(point1, point2)
+            if samp1 == samp2:
+                distances[samp1] += seg._epicentral_distance()
             else:
                 pointhalf = seg._point_at_fraction(0.5)
-                seg1 = self.__class__(point1, pointhalf, self.L, weighting=None)
-                seg2 = self.__class__(pointhalf, point2, self.L, weighting=None)
-                distances[pix1] += seg1._epicentral_distance()
-                distances[pix2] += seg2._epicentral_distance()
+                seg1 = _GCPwork(point1, pointhalf)
+                seg2 = _GCPwork(pointhalf, point2)
+                distances[samp1] += seg1._epicentral_distance()
+                distances[samp2] += seg2._epicentral_distance()
         return distances
 
     def calc_pixel_areas(self, r=1):
