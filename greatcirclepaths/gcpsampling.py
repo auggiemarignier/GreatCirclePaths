@@ -62,15 +62,9 @@ class _MWGCP(_GCPwork):
         for point1, point2, samp1, samp2 in zip(
             self.points, self.points[1:], samples, samples[1:]
         ):
+            sample_weights = self._point_to_sample_weights(point1, *samp1, self.L)
             seg = _GCPwork(point1, point2)
-            if samp1 == samp2:
-                distances[samp1] += seg._epicentral_distance()
-            else:
-                pointhalf = seg._point_at_fraction(0.5)
-                seg1 = _GCPwork(point1, pointhalf)
-                seg2 = _GCPwork(pointhalf, point2)
-                distances[samp1] += seg1._epicentral_distance()
-                distances[samp2] += seg2._epicentral_distance()
+            distances += seg._epicentral_distance() * sample_weights
         return distances
 
     def calc_pixel_areas(self, r=1):
