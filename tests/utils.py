@@ -37,6 +37,7 @@ def build_path_matrix_ser(start, stop, L):
             stp,
             L=L,
             weighting="distances",
+            latlon=True,
         )
         path.get_points(points_per_rad=150)
         path.fill()

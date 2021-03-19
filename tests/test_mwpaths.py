@@ -12,15 +12,18 @@ def L():
 
 @pytest.fixture
 def random_start_stop():
-    from random import uniform
+    def _random_start_stop():
+        from random import uniform
 
-    start = (uniform(-90, 90), uniform(-180, 180))
-    stop = (uniform(-90, 90), uniform(-180, 180))
-    return start, stop
+        start = (uniform(-90, 90), uniform(-180, 180))
+        stop = (uniform(-90, 90), uniform(-180, 180))
+        return start, stop
+
+    return _random_start_stop
 
 
 def test_mw_pixel_areas(random_start_stop, L):
-    start, stop = random_start_stop
+    start, stop = random_start_stop()
     path = _MWGCP(start, stop, L, latlon=True)
     areas = path.calc_pixel_areas()
     assert np.isclose(np.sum(areas), 4 * np.pi)
@@ -28,7 +31,7 @@ def test_mw_pixel_areas(random_start_stop, L):
 
 @pytest.mark.parametrize("n", [1, 2])
 def test_mw_path_pixel_distances(random_start_stop, L, n):
-    start, stop = random_start_stop
+    start, stop = random_start_stop()
     path = _MWGCP(start, stop, L, latlon=True)
     path.get_points(points_per_rad=150)
     pixels = path.select_samples(n_nearest=n)
@@ -80,6 +83,24 @@ def test_distance_point_to_sample_weights(L, n):
     assert all([tt in nz[0] for tt in nearest_thetas]) and all(
         [nzt in nearest_thetas for nzt in nz[0]]
     )
-    assert all([pp in nz[1] for pp in nearest_phis]) and all([
-        nzp in nearest_phis for nzp in nz[1]
-    ])
+    assert all([pp in nz[1] for pp in nearest_phis]) and all(
+        [nzp in nearest_phis for nzp in nz[1]]
+    )
+
+
+def test_path_integral(L, random_start_stop):
+    from tests.utils import build_path_matrix_ser
+
+    paths = [random_start_stop() for _ in range(50)]
+    starts = np.array([path[0] for path in paths])
+    stops = np.array([path[1] for path in paths])
+    f_mw = np.ones(pyssht.sample_shape(L)).flatten()
+    path_matrix = build_path_matrix_ser(starts, stops, L)
+
+    numerical = path_matrix.dot(f_mw)
+    path_lengths = [
+        _MWGCP(stt, stp, L, latlon=True)._epicentral_distance()
+        for stt, stp in zip(starts, stops)
+    ]
+
+    assert np.allclose(numerical, path_lengths)
