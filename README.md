@@ -1,10 +1,18 @@
+[![PyPI version](https://badge.fury.io/py/greatcirclepaths.svg)](https://badge.fury.io/py/greatcirclepaths)
+
 # Great Circle Path
 
-A simple script to find pixels along great circle paths.  Supports [Healpix](https://healpy.readthedocs.io/en/latest/index.html) and [MW](https://arxiv.org/abs/1110.6298#:~:text=The%20fundamental%20property%20of%20any,(L%5E2)%20samples.)
+A simple package and script to find pixels along great circle paths.  Supports [Healpix](https://healpy.readthedocs.io/en/latest/index.html) and [MW](https://arxiv.org/abs/1110.6298#:~:text=The%20fundamental%20property%20of%20any,(L%5E2)%20samples.)
 
 ## Installation
 
-All dependencies managed by [poetry](https://python-poetry.org/)
+Package can be found on [pypi](https://pypi.org/project/greatcirclepaths/).
+
+```bash
+pip install greatcirclepaths
+```
+
+If installing from source, all dependencies can be managed by [poetry](https://python-poetry.org/)
 
 ```bash
 cd GreatCirclePaths
@@ -12,7 +20,7 @@ poetry install
 source .venv/bin/activate
 ```
 
-Note for the last line, the location of the environment (in this case `.venv`) will depend on your poetry configuration.  If you prefer to use `pip` the main dependecies are [healpy](https://pypi.org/project/healpy/) and [pyssht](https://pypi.org/project/pyssht/).
+Note for the last line, the location of the environment (in this case `.venv`) will depend on your poetry configuration.
 
 Test the code with
 
@@ -21,6 +29,8 @@ pytest
 ```
 
 ## Usage
+
+Main script can be used as
 
 ```bash
 cd greatcirclepaths
@@ -40,6 +50,8 @@ If the data is i lat/lon (degrees) use the `--latlon` flag.
 Run `python main.py --help` for further details.
 
 This can be quite slow when picking many paths so we recommend using as many processes as possible.  Default is 4.
+
+The package also gives access to the `GreatCirclePath` class for things like finding the lenght of paths and coordinates along the path.
 
 ## Visulaisation
 
