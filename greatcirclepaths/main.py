@@ -42,8 +42,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-W",
         "--weighting",
-        choices=["areas", "distances"],
-        help="Weight pixels either by area or distance travelled by path",
+        choices=["areas", "distances", "average"],
+        help="Weight pixels either by area or (average) distance travelled by path",
     )
     parser.add_argument("--latlon", action="store_true", help="Use if inputs are in lat/lon format")
     args = parser.parse_args()

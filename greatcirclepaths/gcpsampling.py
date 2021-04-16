@@ -18,8 +18,8 @@ class _HpxGCP(_GCPwork):
 
 class _MWGCP(_GCPwork):
     def __init__(self, start, stop, L, weighting=None, latlon=False):
-        if weighting not in [None, "areas", "distances"]:
-            raise ValueError("weighting must be either None, 'areas' or 'distances")
+        if weighting not in [None, "areas", "distances", "average"]:
+            raise ValueError("weighting must be either None, 'areas', 'distances' or 'average'.")
         super().__init__(start, stop, latlon=latlon)
         self.L = L
         self.map = np.zeros(pyssht.sample_shape(L))
@@ -32,8 +32,10 @@ class _MWGCP(_GCPwork):
         if self.weighting is not None:
             if self.weighting == "areas":
                 weights = self.calc_pixel_areas()
-            if self.weighting == "distances":
+            if self.weighting in ["distances", "average"]:
                 weights = self.calc_segment_distances(samples)
+                if self.weighting == "average":
+                    weights /= self._epicentral_distance()
             self.map *= weights
         self.map = self.map.flatten()
 
