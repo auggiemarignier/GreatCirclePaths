@@ -1,5 +1,8 @@
 from greatcirclepaths.gcpsampling import _HpxGCP, _MWGCP
 from greatcirclepaths.gcpwork import _GCPwork
+from importlib.metadata import version
+
+__version__ = version("greatcirclepaths")
 
 
 class GreatCirclePath:
